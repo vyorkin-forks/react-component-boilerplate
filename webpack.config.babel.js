@@ -7,6 +7,7 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var merge = require('webpack-merge');
 var MTRC = require('markdown-to-react-components');
+var Clean = require('clean-webpack-plugin');
 
 var App = require('./demo/app.jsx');
 var pkg = require('./package.json');
@@ -110,38 +111,39 @@ if (TARGET === 'gh-pages' || TARGET === 'deploy-gh-pages') {
       filename: 'bundle.[chunkhash].js',
     },
     plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        // This has effect on the react lib size
-        'NODE_ENV': JSON.stringify('production'),
-      }
-    }),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
-    }),
-    new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.[chunkhash].js'),
-    new HtmlWebpackPlugin({
-      title: pkg.name + ' - ' + pkg.description,
-      templateContent: function(templateParams, compilation) {
-        var tpl = fs.readFileSync(path.join(__dirname, 'lib/template.html'), 'utf8');
-        var readme = fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8');
-        var replacements = {
-          name: pkg.name,
-          description: pkg.description,
-          demo: React.renderToStaticMarkup(<App />),
-          documentation: React.renderToStaticMarkup(<div className='documentation' key='documentation'>{MTRC(readme).tree}</div>)
-        };
+      new Clean(['gh-pages']),
+      new webpack.DefinePlugin({
+        'process.env': {
+          // This has effect on the react lib size
+          'NODE_ENV': JSON.stringify('production'),
+        }
+      }),
+      new webpack.optimize.DedupePlugin(),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        },
+      }),
+      new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.[chunkhash].js'),
+      new HtmlWebpackPlugin({
+        title: pkg.name + ' - ' + pkg.description,
+        templateContent: function(templateParams, compilation) {
+          var tpl = fs.readFileSync(path.join(__dirname, 'lib/template.html'), 'utf8');
+          var readme = fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8');
+          var replacements = {
+            name: pkg.name,
+            description: pkg.description,
+            demo: React.renderToStaticMarkup(<App />),
+            documentation: React.renderToStaticMarkup(<div className='documentation' key='documentation'>{MTRC(readme).tree}</div>)
+          };
 
-        return tpl.replace(/%(\w*)%/g, function(match) {
-          var key = match.slice(1, -1);
+          return tpl.replace(/%(\w*)%/g, function(match) {
+            var key = match.slice(1, -1);
 
-          return replacements[key] ? replacements[key] : match;
-        });
-      }
-    }),
+            return replacements[key] ? replacements[key] : match;
+          });
+        }
+      }),
     ],
     module: {
       loaders: [
