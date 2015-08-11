@@ -11,7 +11,21 @@
     {% } %}
   </head>
   <body>
-    %body%
+    <div class="pure-g">
+      <header class="pure-u-1">
+        <h1>%name%</h1>
+
+        <div class="description">%description%</div>
+      </header>
+
+      <article class="pure-u-1">
+        <h2>Demonstration</h2>
+        <section class="demonstration">%demo%</section>
+
+        <h2>Documentation</h2>
+        <section class="documentation">%documentation%</section>
+      </article>
+    </div>
 
     {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
     <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>

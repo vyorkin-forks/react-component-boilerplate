@@ -6,8 +6,9 @@ var React = require('react');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var merge = require('webpack-merge');
+var MTRC = require('markdown-to-react-components');
 
-//var App = require('./demo/app.jsx');
+var App = require('./demo/app.jsx');
 var pkg = require('./package.json');
 
 var TARGET = process.env.npm_lifecycle_event;
@@ -33,10 +34,6 @@ var mergeDemo = merge.bind(null, {
     {
       test: /\.css$/,
       loaders: ['style', 'css'],
-    },
-    {
-      test: /\.md$/,
-      loaders: ['html', 'highlight', 'markdown'],
     },
     {
       test: /\.png$/,
@@ -129,11 +126,13 @@ if (TARGET === 'gh-pages' || TARGET === 'deploy-gh-pages') {
     new HtmlWebpackPlugin({
       title: pkg.name + ' - ' + pkg.description,
       templateContent: function(templateParams, compilation) {
-        // XXX: this won't work with demo content as it depends on Markdown loaded through
-        // webpack. need to work around that somehow...
         var tpl = fs.readFileSync(path.join(__dirname, 'lib/template.html'), 'utf8');
+        var readme = fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8');
         var replacements = {
-          body: React.renderToStaticMarkup(<div>foo</div>)
+          name: pkg.name,
+          description: pkg.description,
+          demo: React.renderToStaticMarkup(<App />),
+          documentation: React.renderToStaticMarkup(<div className='documentation' key='documentation'>{MTRC(readme).tree}</div>)
         };
 
         return tpl.replace(/%(\w*)%/g, function(match) {
