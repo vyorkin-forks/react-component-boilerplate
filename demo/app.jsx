@@ -14,8 +14,11 @@ module.exports = React.createClass({
         <Fork className='right' project={pkgInfo.user + '/' + pkgInfo.name} />
           <p>Just demonstrating the awesomeness of this boilerplate here.</p>
 
-          <div>...</div>
+          <div onClick={this.easterEgg}>...</div>
       </div>
     );
   },
+  easterEgg() {
+    console.log('easter egg');
+  }
 });

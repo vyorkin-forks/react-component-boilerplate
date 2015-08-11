@@ -32,26 +32,32 @@ var mergeDemo = merge.bind(null, {
   },
   module: {
     loaders: [
-    {
-      test: /\.css$/,
-      loaders: ['style', 'css'],
-    },
-    {
-      test: /\.png$/,
-      loader: 'url?limit=100000&mimetype=image/png',
-      include: config.paths.demo,
-    },
-    {
-      test: /\.jpg$/,
-      loader: 'file',
-      include: config.paths.demo,
-    },
-    {
-      test: /\.json$/,
-      loader: 'json',
-    },
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css'],
+      },
+      {
+        test: /\.png$/,
+        loader: 'url?limit=100000&mimetype=image/png',
+        include: config.paths.demo,
+      },
+      {
+        test: /\.jpg$/,
+        loader: 'file',
+        include: config.paths.demo,
+      },
+      {
+        test: /\.json$/,
+        loader: 'json',
+      },
     ]
-  }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: pkg.name + ' - ' + pkg.description,
+      templateContent: renderJSX
+    })
+  ]
 });
 
 if (TARGET === 'start') {
@@ -71,14 +77,13 @@ if (TARGET === 'start') {
       filename: 'bundle.js'
     },
     plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('development'),
-      }
-    }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new HtmlWebpackPlugin(),
+      new webpack.DefinePlugin({
+        'process.env': {
+          'NODE_ENV': JSON.stringify('development'),
+        }
+      }),
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.NoErrorsPlugin(),
     ],
     module: {
       preLoaders: [
@@ -124,26 +129,7 @@ if (TARGET === 'gh-pages' || TARGET === 'deploy-gh-pages') {
           warnings: false
         },
       }),
-      new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.[chunkhash].js'),
-      new HtmlWebpackPlugin({
-        title: pkg.name + ' - ' + pkg.description,
-        templateContent: function(templateParams, compilation) {
-          var tpl = fs.readFileSync(path.join(__dirname, 'lib/template.html'), 'utf8');
-          var readme = fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8');
-          var replacements = {
-            name: pkg.name,
-            description: pkg.description,
-            demo: React.renderToStaticMarkup(<App />),
-            documentation: React.renderToStaticMarkup(<div className='documentation' key='documentation'>{MTRC(readme).tree}</div>)
-          };
-
-          return tpl.replace(/%(\w*)%/g, function(match) {
-            var key = match.slice(1, -1);
-
-            return replacements[key] ? replacements[key] : match;
-          });
-        }
-      }),
+      new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.[chunkhash].js')
     ],
     module: {
       loaders: [
@@ -203,3 +189,23 @@ if (TARGET === 'dist-min') {
     ],
   });
 }
+
+function renderJSX(templateParams, compilation) {
+  var tpl = fs.readFileSync(path.join(__dirname, 'lib/template.html'), 'utf8');
+  var readme = fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8');
+  var replacements = {
+    name: pkg.name,
+    description: pkg.description,
+    demo: React.renderToString(<App />),
+    documentation: React.renderToStaticMarkup(
+      <div key='documentation'>{MTRC(readme).tree}</div>
+    )
+  };
+
+  return tpl.replace(/%(\w*)%/g, function(match) {
+    var key = match.slice(1, -1);
+
+    return replacements[key] ? replacements[key] : match;
+  });
+}
+

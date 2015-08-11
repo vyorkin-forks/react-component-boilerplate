@@ -13,8 +13,7 @@ var App = require('./app.jsx');
 main();
 
 function main() {
-  var app = document.createElement('div');
-  document.body.appendChild(app);
+  var app = document.getElementsByClassName('demonstration')[0];
 
   React.render(<App />, app);
 }
