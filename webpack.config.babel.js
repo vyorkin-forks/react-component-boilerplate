@@ -1,10 +1,13 @@
 'use strict';
+var fs = require('fs');
 var path = require('path');
 
+var React = require('react');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var merge = require('webpack-merge');
 
+//var App = require('./demo/app.jsx');
 var pkg = require('./package.json');
 
 var TARGET = process.env.npm_lifecycle_event;
@@ -124,7 +127,21 @@ if (TARGET === 'gh-pages' || TARGET === 'deploy-gh-pages') {
     }),
     new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.[chunkhash].js'),
     new HtmlWebpackPlugin({
-      title: pkg.name + ' - ' + pkg.description
+      title: pkg.name + ' - ' + pkg.description,
+      templateContent: function(templateParams, compilation) {
+        // XXX: this won't work with demo content as it depends on Markdown loaded through
+        // webpack. need to work around that somehow...
+        var tpl = fs.readFileSync(path.join(__dirname, 'lib/template.html'), 'utf8');
+        var replacements = {
+          body: React.renderToStaticMarkup(<div>foo</div>)
+        };
+
+        return tpl.replace(/%(\w*)%/g, function(match) {
+          var key = match.slice(1, -1);
+
+          return replacements[key] ? replacements[key] : match;
+        });
+      }
     }),
     ],
     module: {
