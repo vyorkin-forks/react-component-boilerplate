@@ -1,14 +1,16 @@
 {
+  "presets": [
+    "images",
+    "json",
+    "react"
+  ],
   "env": {
     "start": {
       "devtool": "eval-source-map",
       "presets": [
         "eslint",
         "hmr",
-        "react",
-        "dev:css",
-        "images",
-        "json"
+        "dev:css"
       ]
     },
     "gh-pages": {
@@ -19,10 +21,7 @@
       },
       "presets": [
         "production:vendor",
-        "production:css",
-        "react",
-        "images",
-        "json"
+        "production:css"
       ]
     }
   }

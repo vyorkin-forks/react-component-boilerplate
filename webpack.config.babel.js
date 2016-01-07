@@ -55,10 +55,11 @@ const demoCommon = {
 
 const parsedEnv = webpackrc.env[TARGET];
 const presets = webpackPresets(config);
+const parsedRootPresets = webpackrc.presets.map((preset) => presets[preset]);
 const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
 
 if (TARGET === 'start') {
-  module.exports = merge.apply(null, [parsedEnv, demoCommon, {
+  module.exports = merge.apply(null, parsedRootPresets.concat([, parsedEnv, demoCommon, {
     entry: config.paths.demo,
     plugins: [
       new webpack.DefinePlugin({
@@ -69,11 +70,11 @@ if (TARGET === 'start') {
         templateContent: renderJSX
       })
     ]
-  }].concat(parsedPresets));
+  }]).concat(parsedPresets));
 }
 
 if (TARGET === 'gh-pages') {
-  module.exports = merge.apply(null, [parsedEnv, demoCommon, {
+  module.exports = merge.apply(null, parsedRootPresets.concat([parsedEnv, demoCommon, {
     entry: {
       app: config.paths.demo
     },
@@ -97,7 +98,7 @@ if (TARGET === 'gh-pages') {
         }
       })
     ]
-  }].concat(parsedPresets));
+  }]).concat(parsedPresets));
 }
 
 /*
