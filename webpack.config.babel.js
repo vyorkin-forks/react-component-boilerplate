@@ -19,7 +19,9 @@ const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
 }));
 
 const RENDER_UNIVERSAL = true;
-const TARGET = process.env.npm_lifecycle_event;
+
+// XXX: prepush hook bug
+const TARGET = process.env.npm_lifecycle_event || 'test';
 
 process.env.BABEL_ENV = TARGET;
 
