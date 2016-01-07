@@ -24,6 +24,16 @@
         "production:css",
         "minify"
       ]
+    },
+    "tdd": {
+      "presets": [
+        "eslint"
+      ]
+    },
+    "test": {
+      "presets": [
+        "eslint"
+      ]
     }
   }
 }

@@ -101,7 +101,17 @@ if (TARGET === 'gh-pages') {
   }));
 }
 
-function evaluatePresets(webpackrc, target, paths, config) {
+// !TARGET === prepush hook for test
+if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
+  module.exports = evaluatePresets(webpackrc, TARGET, Object.assign({}, paths, {
+    jsx: [
+      path.join(ROOT_PATH, 'src'),
+      path.join(ROOT_PATH, 'tests')
+    ]
+  }), demoCommon);
+}
+
+function evaluatePresets(webpackrc, target, paths, config = {}) {
   const parsedEnv = webpackrc.env[target];
   const presets = webpackPresets(paths);
   const rootConfig = {
@@ -118,33 +128,6 @@ function evaluatePresets(webpackrc, target, paths, config) {
 }
 
 /*
-// !TARGET === prepush hook for test
-if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
-  module.exports = merge(demoCommon, {
-    module: {
-      preLoaders: [
-        {
-          test: /\.jsx?$/,
-          loaders: ['eslint'],
-          include: [
-            config.paths.tests
-          ]
-        }
-      ],
-      loaders: [
-        {
-          test: /\.jsx?$/,
-          loaders: ['babel?cacheDirectory'],
-          include: [
-            config.paths.src,
-            config.paths.tests
-          ]
-        }
-      ]
-    }
-  })
-}
-
 const distCommon = {
   devtool: 'source-map',
   output: {
