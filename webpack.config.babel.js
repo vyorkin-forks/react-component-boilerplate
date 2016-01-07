@@ -14,7 +14,6 @@ import pkg from './package.json';
 
 import webpackPresets from './lib/presets';
 import evaluatePresets from './lib/evaluate_presets';
-import resolvePaths from './lib/resolve_paths';
 import renderJSX from './lib/render_jsx.jsx';
 
 const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
@@ -31,24 +30,10 @@ const commonConfig = {
     new SystemBellPlugin()
   ]
 };
-const paths = resolvePaths(__dirname, {
-  jsx: ['./demo', './src'],
-  png: './demo',
-  jpg: './demo',
-  json: './package.json',
-  css: [
-    './demo',
-    './style.css',
-    './node_modules/purecss',
-    './node_modules/highlight.js/styles/github.css',
-    './node_modules/react-ghfork/gh-fork-ribbon.ie.css',
-    './node_modules/react-ghfork/gh-fork-ribbon.css'
-  ]
-});
 const evaluate = evaluatePresets.bind(null, webpackPresets, webpackrc, TARGET);
 
 if (TARGET === 'start') {
-  module.exports = evaluate(paths, merge(commonConfig, {
+  module.exports = evaluate(merge(commonConfig, {
     plugins: [
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('development')
@@ -62,7 +47,7 @@ if (TARGET === 'start') {
 }
 
 if (TARGET === 'gh-pages') {
-  module.exports = evaluate(paths, merge(commonConfig, {
+  module.exports = evaluate(merge(commonConfig, {
     plugins: [
       new Clean(['gh-pages']),
       new webpack.DefinePlugin({
@@ -81,12 +66,10 @@ if (TARGET === 'gh-pages') {
 }
 
 // !TARGET === prepush hook for test
-if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
-  module.exports = evaluate(Object.assign({}, paths, resolvePaths(__dirname, {
-    jsx: ['./src', './tests']
-  })), commonConfig);
+if (TARGET === 'test' || TARGET === 'test:tdd' || !TARGET) {
+  module.exports = evaluate(commonConfig);
 }
 
 if (TARGET === 'dist' || TARGET === 'dist:min') {
-  module.exports = evaluate(paths, commonConfig);
+  module.exports = evaluate(commonConfig);
 }

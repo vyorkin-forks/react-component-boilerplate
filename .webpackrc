@@ -4,6 +4,20 @@
     "json",
     "react"
   ],
+  "paths": {
+    "jsx": ["./demo", "./src"],
+    "png": "./demo",
+    "jpg": "./demo",
+    "json": "./package.json",
+    "css": [
+      "./demo",
+      "./style.css",
+      "./node_modules/purecss",
+      "./node_modules/highlight.js/styles/github.css",
+      "./node_modules/react-ghfork/gh-fork-ribbon.ie.css",
+      "./node_modules/react-ghfork/gh-fork-ribbon.css"
+    ]
+  },
   "common": {
     "dist": {
       "devtool": "source-map",
@@ -20,6 +34,11 @@
           "amd": "React",
           "root": "React"
         }
+      }
+    },
+    "test": {
+      "paths": {
+        "jsx": ["./src", "./tests"]
       }
     }
   },
