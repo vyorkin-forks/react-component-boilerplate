@@ -8,13 +8,13 @@ import Clean from 'clean-webpack-plugin';
 import merge from 'webpack-merge';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import MTRC from 'markdown-to-react-components';
 
 import App from './demo/App.jsx';
 import pkg from './package.json';
 
 import webpackPresets from './lib/presets';
 import evaluatePresets from './lib/evaluate_presets';
+import renderJSX from './lib/render_jsx.jsx';
 
 const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
   encoding: 'utf-8'
@@ -100,25 +100,4 @@ if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
 
 if (TARGET === 'dist' || TARGET === 'dist:min') {
   module.exports = evaluate(paths, commonConfig);
-}
-
-function renderJSX(demoTemplate, templateParams, compilation) {
-  demoTemplate = demoTemplate || '';
-
-  var tpl = fs.readFileSync(path.join(__dirname, 'lib/index_template.tpl'), 'utf8');
-  var readme = fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8');
-  var replacements = {
-    name: pkg.name,
-    description: pkg.description,
-    demo: demoTemplate,
-    documentation: ReactDOM.renderToStaticMarkup(
-      <div key="documentation">{MTRC(readme).tree}</div>
-    )
-  };
-
-  return tpl.replace(/%(\w*)%/g, function(match) {
-    var key = match.slice(1, -1);
-
-    return typeof replacements[key] === 'string' ? replacements[key] : match;
-  });
 }
