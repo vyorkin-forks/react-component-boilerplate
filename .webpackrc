@@ -6,7 +6,8 @@
         "eslint",
         "hmr",
         "react",
-        "dev:css"
+        "dev:css",
+        "images"
       ]
     },
     "gh-pages": {
@@ -18,7 +19,8 @@
       "presets": [
         "production:vendor",
         "production:css",
-        "react"
+        "react",
+        "images"
       ]
     }
   }

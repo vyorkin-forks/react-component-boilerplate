@@ -45,20 +45,10 @@ process.env.BABEL_ENV = TARGET;
 
 const demoCommon = {
   resolve: {
-    extensions: ['', '.js', '.jsx', '.css', '.png', '.jpg']
+    extensions: ['']
   },
   module: {
     loaders: [
-      {
-        test: /\.png$/,
-        loader: 'url?limit=100000&mimetype=image/png',
-        include: config.paths.demo
-      },
-      {
-        test: /\.jpg$/,
-        loader: 'file',
-        include: config.paths.demo
-      },
       {
         test: /\.json$/,
         loader: 'json',
