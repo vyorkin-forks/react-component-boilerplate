@@ -83,9 +83,5 @@
     "reactjs",
     "boilerplate"
   ],
-  "license": "MIT",
-  "pre-push": [
-    "test",
-    "lint"
-  ]
+  "license": "MIT"
 }
