@@ -4,6 +4,25 @@
     "json",
     "react"
   ],
+  "common": {
+    "dist": {
+      "devtool": "source-map",
+      "output": {
+        "path": "./dist",
+        "libraryTarget": "umd",
+        "library": "Boilerplate"
+      },
+      "entry": "./src",
+      "externals": {
+        "react": {
+          "commonjs": "react",
+          "commonjs2": "react",
+          "amd": "React",
+          "root": "React"
+        }
+      }
+    }
+  },
   "env": {
     "start": {
       "devtool": "eval-source-map",
@@ -33,6 +52,19 @@
     "test": {
       "presets": [
         "eslint"
+      ]
+    },
+    "dist": {
+      "output": {
+        "filename": "boilerplate.js"
+      }
+    },
+    "dist:min": {
+      "output": {
+        "filename": "boilerplate.min.js"
+      },
+      "presets": [
+        "minify"
       ]
     }
   }

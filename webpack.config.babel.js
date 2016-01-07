@@ -25,14 +25,7 @@ const ROOT_PATH = __dirname;
 
 process.env.BABEL_ENV = TARGET;
 
-/*
-const config = {
-  filename: 'boilerplate',
-  library: 'Boilerplate'
-};
-*/
-
-const demoCommon = {
+const commonConfig = {
   plugins: [
     new SystemBellPlugin()
   ]
@@ -53,19 +46,11 @@ const paths = {
     path.join(ROOT_PATH, 'node_modules/highlight.js/styles/github.css'),
     path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.ie.css'),
     path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.css')
-  ],
-
-  // XXX: short these out
-  /*
-  dist: path.join(ROOT_PATH, 'dist'),
-  src: path.join(ROOT_PATH, 'src'),
-  demo: path.join(ROOT_PATH, 'demo'),
-  tests: path.join(ROOT_PATH, 'tests')
-  */
+  ]
 };
 
 if (TARGET === 'start') {
-  module.exports = evaluatePresets(webpackrc, TARGET, paths, merge(demoCommon, {
+  module.exports = evaluatePresets(webpackrc, TARGET, paths, merge(commonConfig, {
     entry: paths.entry,
     plugins: [
       new webpack.DefinePlugin({
@@ -80,7 +65,7 @@ if (TARGET === 'start') {
 }
 
 if (TARGET === 'gh-pages') {
-  module.exports = evaluatePresets(webpackrc, TARGET, paths, merge(demoCommon, {
+  module.exports = evaluatePresets(webpackrc, TARGET, paths, merge(commonConfig, {
     entry: {
       app: paths.entry
     },
@@ -108,66 +93,16 @@ if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
       path.join(ROOT_PATH, 'src'),
       path.join(ROOT_PATH, 'tests')
     ]
-  }), demoCommon);
+  }), commonConfig);
 }
 
-/*
-const distCommon = {
-  devtool: 'source-map',
-  output: {
-    path: config.paths.dist,
-    libraryTarget: 'umd',
-    library: config.library
-  },
-  entry: config.paths.src,
-  externals: {
-    'react': {
-        commonjs: 'react',
-        commonjs2: 'react',
-        amd: 'React',
-        root: 'React'
-    }
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.jsx?$/,
-        loaders: ['babel'],
-        include: config.paths.src
-      }
-    ]
-  },
-  plugins: [
-    new SystemBellPlugin()
-  ]
-};
-
-if (TARGET === 'dist') {
-  module.exports = merge(distCommon, {
-    output: {
-      filename: config.filename + '.js'
-    }
-  });
+if (TARGET === 'dist' || TARGET === 'dist:min') {
+  module.exports = evaluatePresets(webpackrc, TARGET, paths, commonConfig);
 }
-
-if (TARGET === 'dist-min') {
-  module.exports = merge(distCommon, {
-    output: {
-      filename: config.filename + '.min.js'
-    },
-    plugins: [
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false
-        }
-      })
-    ]
-  });
-}
-*/
 
 function evaluatePresets(webpackrc, target, paths, config = {}) {
   const parsedEnv = webpackrc.env[target];
+  const commonConfig = webpackrc.common[target.split(':')[0]] || {};
   const presets = webpackPresets(paths);
   const rootConfig = {
     resolve: {
@@ -175,9 +110,9 @@ function evaluatePresets(webpackrc, target, paths, config = {}) {
     }
   };
   const parsedRootPresets = webpackrc.presets.map((preset) => presets[preset]);
-  const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
+  const parsedPresets = parsedEnv.presets && parsedEnv.presets.map((preset) => presets[preset]);
 
-  return merge.apply(null, [rootConfig].concat(parsedRootPresets).concat([
+  return merge.apply(null, [rootConfig, commonConfig].concat(parsedRootPresets).concat([
     parsedEnv, config
   ]).concat(parsedPresets));
 }
