@@ -91,12 +91,7 @@ if (TARGET === 'gh-pages') {
           RENDER_UNIVERSAL ? ReactDOM.renderToString(<App />) : ''
         )
       }),
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false
-        }
-      })
+      new webpack.optimize.DedupePlugin()
     ]
   }]).concat(parsedPresets));
 }

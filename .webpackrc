@@ -21,7 +21,8 @@
       },
       "presets": [
         "production:vendor",
-        "production:css"
+        "production:css",
+        "minify"
       ]
     }
   }
