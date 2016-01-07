@@ -111,22 +111,6 @@ if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
   }), demoCommon);
 }
 
-function evaluatePresets(webpackrc, target, paths, config = {}) {
-  const parsedEnv = webpackrc.env[target];
-  const presets = webpackPresets(paths);
-  const rootConfig = {
-    resolve: {
-      extensions: ['']
-    }
-  };
-  const parsedRootPresets = webpackrc.presets.map((preset) => presets[preset]);
-  const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
-
-  return merge.apply(null, [rootConfig].concat(parsedRootPresets).concat([
-    parsedEnv, config
-  ]).concat(parsedPresets));
-}
-
 /*
 const distCommon = {
   devtool: 'source-map',
@@ -181,6 +165,22 @@ if (TARGET === 'dist-min') {
   });
 }
 */
+
+function evaluatePresets(webpackrc, target, paths, config = {}) {
+  const parsedEnv = webpackrc.env[target];
+  const presets = webpackPresets(paths);
+  const rootConfig = {
+    resolve: {
+      extensions: ['']
+    }
+  };
+  const parsedRootPresets = webpackrc.presets.map((preset) => presets[preset]);
+  const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
+
+  return merge.apply(null, [rootConfig].concat(parsedRootPresets).concat([
+    parsedEnv, config
+  ]).concat(parsedPresets));
+}
 
 function renderJSX(demoTemplate, templateParams, compilation) {
   demoTemplate = demoTemplate || '';
