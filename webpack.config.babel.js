@@ -37,9 +37,6 @@ const evaluate = evaluatePresets.bind(
 if (TARGET === 'start') {
   module.exports = evaluate({
     plugins: [
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('development')
-      }),
       new HtmlWebpackPlugin({
         title: pkg.name + ' - ' + pkg.description,
         templateContent: renderJSX
@@ -52,10 +49,6 @@ if (TARGET === 'gh-pages') {
   module.exports = evaluate({
     plugins: [
       new Clean(['gh-pages']),
-      new webpack.DefinePlugin({
-          // This has effect on the react lib size
-        'process.env.NODE_ENV': JSON.stringify('production')
-      }),
       new HtmlWebpackPlugin({
         title: pkg.name + ' - ' + pkg.description,
         templateContent: renderJSX.bind(
