@@ -39,7 +39,10 @@
     "test": {
       "paths": {
         "jsx": ["./src", "./tests"]
-      }
+      },
+      "presets": [
+        "eslint"
+      ]
     }
   },
   "env": {
@@ -65,16 +68,6 @@
         "production:vendor",
         "production:css",
         "minify"
-      ]
-    },
-    "tdd": {
-      "presets": [
-        "eslint"
-      ]
-    },
-    "test": {
-      "presets": [
-        "eslint"
       ]
     },
     "dist": {
