@@ -3,6 +3,7 @@
     "start": {
       "devtool": "eval-source-map",
       "presets": [
+        "eslint",
         "hmr",
         "react",
         "dev:css"

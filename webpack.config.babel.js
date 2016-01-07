@@ -48,16 +48,6 @@ const demoCommon = {
     extensions: ['', '.js', '.jsx', '.css', '.png', '.jpg']
   },
   module: {
-    preLoaders: [
-      {
-        test: /\.jsx?$/,
-        loaders: ['eslint'],
-        include: [
-          config.paths.demo,
-          config.paths.src
-        ]
-      }
-    ],
     loaders: [
       {
         test: /\.png$/,
