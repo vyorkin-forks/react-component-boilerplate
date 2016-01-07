@@ -32,7 +32,6 @@ const commonConfig = {
   ]
 };
 const paths = {
-  entry: path.join(ROOT_PATH, 'demo'),
   jsx: [
     path.join(ROOT_PATH, 'demo'),
     path.join(ROOT_PATH, 'src')
@@ -53,7 +52,6 @@ const evaluate = evaluatePresets.bind(null, webpackPresets, webpackrc, TARGET);
 
 if (TARGET === 'start') {
   module.exports = evaluate(paths, merge(commonConfig, {
-    entry: paths.entry,
     plugins: [
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('development')
@@ -68,9 +66,6 @@ if (TARGET === 'start') {
 
 if (TARGET === 'gh-pages') {
   module.exports = evaluate(paths, merge(commonConfig, {
-    entry: {
-      app: paths.entry
-    },
     plugins: [
       new Clean(['gh-pages']),
       new webpack.DefinePlugin({

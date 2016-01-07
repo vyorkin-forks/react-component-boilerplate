@@ -25,6 +25,7 @@
   },
   "env": {
     "start": {
+      "entry": "./demo",
       "devtool": "eval-source-map",
       "presets": [
         "eslint",
@@ -33,6 +34,9 @@
       ]
     },
     "gh-pages": {
+      "entry": {
+        "app": "./demo"
+      },
       "output": {
         "path": "./gh-pages",
         "filename": "[name].[chunkhash].js",
