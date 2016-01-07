@@ -27,7 +27,8 @@ const config = {
     dist: path.join(ROOT_PATH, 'dist'),
     src: path.join(ROOT_PATH, 'src'),
     demo: path.join(ROOT_PATH, 'demo'),
-    tests: path.join(ROOT_PATH, 'tests')
+    tests: path.join(ROOT_PATH, 'tests'),
+    json: path.join(ROOT_PATH, 'package.json')
   },
   filename: 'boilerplate',
   library: 'Boilerplate'
@@ -46,15 +47,6 @@ process.env.BABEL_ENV = TARGET;
 const demoCommon = {
   resolve: {
     extensions: ['']
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.json$/,
-        loader: 'json',
-        include: path.join(ROOT_PATH, 'package.json')
-      }
-    ]
   },
   plugins: [
     new SystemBellPlugin()
