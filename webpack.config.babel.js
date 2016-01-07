@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path';
 
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
