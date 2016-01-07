@@ -59,7 +59,7 @@ const parsedRootPresets = webpackrc.presets.map((preset) => presets[preset]);
 const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
 
 if (TARGET === 'start') {
-  module.exports = merge.apply(null, parsedRootPresets.concat([, parsedEnv, demoCommon, {
+  module.exports = merge.apply(null, parsedRootPresets.concat([parsedEnv, demoCommon, {
     entry: config.paths.demo,
     plugins: [
       new webpack.DefinePlugin({
