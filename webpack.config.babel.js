@@ -3,7 +3,6 @@ import path from 'path';
 
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import SystemBellPlugin from 'system-bell-webpack-plugin';
 import Clean from 'clean-webpack-plugin';
 import merge from 'webpack-merge';
@@ -13,6 +12,8 @@ import MTRC from 'markdown-to-react-components';
 
 import App from './demo/App.jsx';
 import pkg from './package.json';
+
+import webpackPresets from './lib/presets';
 
 const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
   encoding: 'utf-8'
@@ -31,7 +32,7 @@ const config = {
   filename: 'boilerplate',
   library: 'Boilerplate'
 };
-const CSS_PATHS = [
+config.paths.css = [
   config.paths.demo,
   path.join(ROOT_PATH, 'style.css'),
   path.join(ROOT_PATH, 'node_modules/purecss'),
@@ -85,74 +86,7 @@ function parsePlugins(plugins) {
 }
 
 const parsedEnv = webpackrc.env[TARGET];
-const presets = {
-  hmr: {
-    plugins: [
-      new webpack.HotModuleReplacementPlugin()
-    ],
-    devServer: {
-      historyApiFallback: true,
-      hot: true,
-      inline: true,
-      progress: true,
-      host: process.env.HOST,
-      port: process.env.PORT,
-      stats: 'errors-only'
-    }
-  },
-  react: {
-    module: {
-      loaders: [
-        {
-          test: /\.jsx?$/,
-          loaders: ['babel?cacheDirectory'],
-          include: [
-            config.paths.demo,
-            config.paths.src
-          ]
-        }
-      ]
-    }
-  },
-  'dev:css': {
-    module: {
-      loaders: [
-        {
-          test: /\.css$/,
-          loaders: ['style', 'css'],
-          include: CSS_PATHS
-        }
-      ]
-    }
-  },
-  'production:css': {
-    plugins: [
-      new ExtractTextPlugin('styles.[chunkhash].css')
-    ],
-    module: {
-      loaders: [
-        {
-          test: /\.css$/,
-          loader: ExtractTextPlugin.extract('style', 'css'),
-          include: CSS_PATHS
-        }
-      ]
-    }
-  },
-  "production:vendor": {
-    entry: {
-      app: config.paths.demo,
-      vendors: [
-        'react'
-      ]
-    },
-    plugins: [
-      new webpack.optimize.CommonsChunkPlugin({
-        names: ['vendors', 'manifest']
-      })
-    ]
-  }
-};
+const presets = webpackPresets(config);
 const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
 
 if (TARGET === 'start') {
