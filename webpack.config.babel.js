@@ -4,7 +4,6 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import SystemBellPlugin from 'system-bell-webpack-plugin';
 import Clean from 'clean-webpack-plugin';
-import merge from 'webpack-merge';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 
@@ -29,10 +28,12 @@ const commonConfig = {
     new SystemBellPlugin()
   ]
 };
-const evaluate = evaluatePresets.bind(null, webpackPresets, webpackrc, TARGET);
+const evaluate = evaluatePresets.bind(
+  null, webpackPresets, webpackrc, TARGET, commonConfig
+);
 
 if (TARGET === 'start') {
-  module.exports = evaluate(merge(commonConfig, {
+  module.exports = evaluate({
     plugins: [
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('development')
@@ -42,11 +43,11 @@ if (TARGET === 'start') {
         templateContent: renderJSX
       })
     ]
-  }));
+  });
 }
 
 if (TARGET === 'gh-pages') {
-  module.exports = evaluate(merge(commonConfig, {
+  module.exports = evaluate({
     plugins: [
       new Clean(['gh-pages']),
       new webpack.DefinePlugin({
@@ -61,7 +62,7 @@ if (TARGET === 'gh-pages') {
         )
       })
     ]
-  }));
+  });
 }
 
-module.exports = evaluate(commonConfig);
+module.exports = evaluate();
