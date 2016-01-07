@@ -3,7 +3,6 @@ import fs from 'fs';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import SystemBellPlugin from 'system-bell-webpack-plugin';
-import Clean from 'clean-webpack-plugin';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 
@@ -48,7 +47,6 @@ if (TARGET === 'start') {
 if (TARGET === 'gh-pages') {
   module.exports = evaluate({
     plugins: [
-      new Clean(['gh-pages']),
       new HtmlWebpackPlugin({
         title: pkg.name + ' - ' + pkg.description,
         templateContent: renderJSX.bind(

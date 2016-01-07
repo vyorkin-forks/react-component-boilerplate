@@ -66,6 +66,7 @@
         "chunkFilename": "[chunkhash].js"
       },
       "presets": [
+        "clean(gh-pages)",
         "env(production)",
         "production:vendor",
         "production:css",
