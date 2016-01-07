@@ -14,6 +14,10 @@ import MTRC from 'markdown-to-react-components';
 import App from './demo/App.jsx';
 import pkg from './package.json';
 
+const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
+  encoding: 'utf-8'
+}));
+
 const RENDER_UNIVERSAL = true;
 const TARGET = process.env.npm_lifecycle_event;
 const ROOT_PATH = __dirname;
@@ -71,42 +75,21 @@ const demoCommon = {
       }
     ]
   },
-  plugins: [
-    new SystemBellPlugin()
-  ]
+  plugins: parsePlugins(webpackrc.plugins)
 };
 
-if (TARGET === 'start') {
-  module.exports = merge(demoCommon, {
-    devtool: 'eval-source-map',
-    entry: config.paths.demo,
+function parsePlugins(plugins) {
+  return plugins.map((plugin) => {
+    return new require(plugin);
+  });
+}
+
+const parsedEnv = webpackrc.env[TARGET];
+const presets = {
+  hmr: {
     plugins: [
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('development')
-      }),
-      new HtmlWebpackPlugin({
-        title: pkg.name + ' - ' + pkg.description,
-        templateContent: renderJSX
-      }),
       new webpack.HotModuleReplacementPlugin()
     ],
-    module: {
-      loaders: [
-        {
-          test: /\.css$/,
-          loaders: ['style', 'css'],
-          include: CSS_PATHS
-        },
-        {
-          test: /\.jsx?$/,
-          loaders: ['babel?cacheDirectory'],
-          include: [
-            config.paths.demo,
-            config.paths.src
-          ]
-        }
-      ]
-    },
     devServer: {
       historyApiFallback: true,
       hot: true,
@@ -116,25 +99,84 @@ if (TARGET === 'start') {
       port: process.env.PORT,
       stats: 'errors-only'
     }
-  });
-}
-
-if (TARGET === 'gh-pages' || TARGET === 'deploy-gh-pages') {
-  module.exports = merge(demoCommon, {
+  },
+  react: {
+    module: {
+      loaders: [
+        {
+          test: /\.jsx?$/,
+          loaders: ['babel?cacheDirectory'],
+          include: [
+            config.paths.demo,
+            config.paths.src
+          ]
+        }
+      ]
+    }
+  },
+  'dev:css': {
+    module: {
+      loaders: [
+        {
+          test: /\.css$/,
+          loaders: ['style', 'css'],
+          include: CSS_PATHS
+        }
+      ]
+    }
+  },
+  'production:css': {
+    plugins: [
+      new ExtractTextPlugin('styles.[chunkhash].css')
+    ],
+    module: {
+      loaders: [
+        {
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract('style', 'css'),
+          include: CSS_PATHS
+        }
+      ]
+    }
+  },
+  "production:vendor": {
     entry: {
       app: config.paths.demo,
       vendors: [
         'react'
       ]
     },
-    output: {
-      path: './gh-pages',
-      filename: '[name].[chunkhash].js',
-      chunkFilename: '[chunkhash].js'
+    plugins: [
+      new webpack.optimize.CommonsChunkPlugin({
+        names: ['vendors', 'manifest']
+      })
+    ]
+  }
+};
+const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
+
+if (TARGET === 'start') {
+  module.exports = merge.apply(null, [parsedEnv, demoCommon, {
+    entry: config.paths.demo,
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('development')
+      }),
+      new HtmlWebpackPlugin({
+        title: pkg.name + ' - ' + pkg.description,
+        templateContent: renderJSX
+      })
+    ]
+  }].concat(parsedPresets));
+}
+
+if (TARGET === 'gh-pages') {
+  module.exports = merge.apply(null, [parsedEnv, demoCommon, {
+    entry: {
+      app: config.paths.demo
     },
     plugins: [
       new Clean(['gh-pages']),
-      new ExtractTextPlugin('styles.[chunkhash].css'),
       new webpack.DefinePlugin({
           // This has effect on the react lib size
         'process.env.NODE_ENV': JSON.stringify('production')
@@ -151,33 +193,12 @@ if (TARGET === 'gh-pages' || TARGET === 'deploy-gh-pages') {
         compress: {
           warnings: false
         }
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        names: ['vendors', 'manifest']
       })
-      // XXX: glitchy still
-      //new webpack.NamedModulesPlugin()
-    ],
-    module: {
-      loaders: [
-        {
-          test: /\.css$/,
-          loader: ExtractTextPlugin.extract('style', 'css'),
-          include: CSS_PATHS
-        },
-        {
-          test: /\.jsx?$/,
-          loaders: ['babel'],
-          include: [
-            config.paths.demo,
-            config.paths.src
-          ]
-        }
-      ]
-    }
-  });
+    ]
+  }].concat(parsedPresets));
 }
 
+/*
 // !TARGET === prepush hook for test
 if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
   module.exports = merge(demoCommon, {
@@ -257,6 +278,7 @@ if (TARGET === 'dist-min') {
     ]
   });
 }
+*/
 
 function renderJSX(demoTemplate, templateParams, compilation) {
   demoTemplate = demoTemplate || '';

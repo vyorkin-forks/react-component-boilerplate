@@ -1,0 +1,29 @@
+{
+  "target": "umd",
+  "entry": "src/index.js",
+  "plugins": [
+    "system-bell-webpack-plugin"
+  ],
+  "env": {
+    "start": {
+      "devtool": "eval-source-map",
+      "presets": [
+        "hmr",
+        "react",
+        "dev:css"
+      ]
+    },
+    "gh-pages": {
+      "output": {
+        "path": "./gh-pages",
+        "filename": "[name].[chunkhash].js",
+        "chunkFilename": "[chunkhash].js"
+      },
+      "presets": [
+        "production:vendor",
+        "production:css",
+        "react"
+      ]
+    }
+  }
+}
