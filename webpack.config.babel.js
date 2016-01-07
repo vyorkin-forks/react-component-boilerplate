@@ -65,11 +65,4 @@ if (TARGET === 'gh-pages') {
   }));
 }
 
-// !TARGET === prepush hook for test
-if (TARGET === 'test' || TARGET === 'test:tdd' || !TARGET) {
-  module.exports = evaluate(commonConfig);
-}
-
-if (TARGET === 'dist' || TARGET === 'dist:min') {
-  module.exports = evaluate(commonConfig);
-}
+module.exports = evaluate(commonConfig);
