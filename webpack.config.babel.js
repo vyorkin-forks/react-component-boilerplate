@@ -14,6 +14,7 @@ import App from './demo/App.jsx';
 import pkg from './package.json';
 
 import webpackPresets from './lib/presets';
+import evaluatePresets from './lib/evaluate_presets';
 
 const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
   encoding: 'utf-8'
@@ -48,9 +49,10 @@ const paths = {
     path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.css')
   ]
 };
+const evaluate = evaluatePresets.bind(null, webpackPresets, webpackrc, TARGET);
 
 if (TARGET === 'start') {
-  module.exports = evaluatePresets(webpackrc, TARGET, paths, merge(commonConfig, {
+  module.exports = evaluate(paths, merge(commonConfig, {
     entry: paths.entry,
     plugins: [
       new webpack.DefinePlugin({
@@ -65,7 +67,7 @@ if (TARGET === 'start') {
 }
 
 if (TARGET === 'gh-pages') {
-  module.exports = evaluatePresets(webpackrc, TARGET, paths, merge(commonConfig, {
+  module.exports = evaluate(paths, merge(commonConfig, {
     entry: {
       app: paths.entry
     },
@@ -88,7 +90,7 @@ if (TARGET === 'gh-pages') {
 
 // !TARGET === prepush hook for test
 if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
-  module.exports = evaluatePresets(webpackrc, TARGET, Object.assign({}, paths, {
+  module.exports = evaluate(Object.assign({}, paths, {
     jsx: [
       path.join(ROOT_PATH, 'src'),
       path.join(ROOT_PATH, 'tests')
@@ -97,24 +99,7 @@ if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
 }
 
 if (TARGET === 'dist' || TARGET === 'dist:min') {
-  module.exports = evaluatePresets(webpackrc, TARGET, paths, commonConfig);
-}
-
-function evaluatePresets(webpackrc, target, paths, config = {}) {
-  const parsedEnv = webpackrc.env[target];
-  const commonConfig = webpackrc.common[target.split(':')[0]] || {};
-  const presets = webpackPresets(paths);
-  const rootConfig = {
-    resolve: {
-      extensions: ['']
-    }
-  };
-  const parsedRootPresets = webpackrc.presets.map((preset) => presets[preset]);
-  const parsedPresets = parsedEnv.presets && parsedEnv.presets.map((preset) => presets[preset]);
-
-  return merge.apply(null, [rootConfig, commonConfig].concat(parsedRootPresets).concat([
-    parsedEnv, config
-  ]).concat(parsedPresets));
+  module.exports = evaluate(paths, commonConfig);
 }
 
 function renderJSX(demoTemplate, templateParams, compilation) {
