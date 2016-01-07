@@ -22,45 +22,51 @@ const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
 const RENDER_UNIVERSAL = true;
 const TARGET = process.env.npm_lifecycle_event;
 const ROOT_PATH = __dirname;
-const config = {
-  paths: {
-    dist: path.join(ROOT_PATH, 'dist'),
-    src: path.join(ROOT_PATH, 'src'),
-    demo: path.join(ROOT_PATH, 'demo'),
-    tests: path.join(ROOT_PATH, 'tests'),
-    json: path.join(ROOT_PATH, 'package.json')
-  },
-  filename: 'boilerplate',
-  library: 'Boilerplate'
-};
-config.paths.css = [
-  config.paths.demo,
-  path.join(ROOT_PATH, 'style.css'),
-  path.join(ROOT_PATH, 'node_modules/purecss'),
-  path.join(ROOT_PATH, 'node_modules/highlight.js/styles/github.css'),
-  path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.ie.css'),
-  path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.css')
-];
 
 process.env.BABEL_ENV = TARGET;
 
+/*
+const config = {
+  filename: 'boilerplate',
+  library: 'Boilerplate'
+};
+*/
+
 const demoCommon = {
-  resolve: {
-    extensions: ['']
-  },
   plugins: [
     new SystemBellPlugin()
   ]
 };
+const paths = {
+  entry: path.join(ROOT_PATH, 'demo'),
+  jsx: [
+    path.join(ROOT_PATH, 'demo'),
+    path.join(ROOT_PATH, 'src')
+  ],
+  png: path.join(ROOT_PATH, 'demo'),
+  jpg: path.join(ROOT_PATH, 'demo'),
+  json: path.join(ROOT_PATH, 'package.json'),
+  css: [
+    path.join(ROOT_PATH, 'demo'),
+    path.join(ROOT_PATH, 'style.css'),
+    path.join(ROOT_PATH, 'node_modules/purecss'),
+    path.join(ROOT_PATH, 'node_modules/highlight.js/styles/github.css'),
+    path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.ie.css'),
+    path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.css')
+  ],
 
-const parsedEnv = webpackrc.env[TARGET];
-const presets = webpackPresets(config);
-const parsedRootPresets = webpackrc.presets.map((preset) => presets[preset]);
-const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
+  // XXX: short these out
+  /*
+  dist: path.join(ROOT_PATH, 'dist'),
+  src: path.join(ROOT_PATH, 'src'),
+  demo: path.join(ROOT_PATH, 'demo'),
+  tests: path.join(ROOT_PATH, 'tests')
+  */
+};
 
 if (TARGET === 'start') {
-  module.exports = merge.apply(null, parsedRootPresets.concat([parsedEnv, demoCommon, {
-    entry: config.paths.demo,
+  module.exports = evaluatePresets(webpackrc, TARGET, paths, merge(demoCommon, {
+    entry: paths.entry,
     plugins: [
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('development')
@@ -70,13 +76,13 @@ if (TARGET === 'start') {
         templateContent: renderJSX
       })
     ]
-  }]).concat(parsedPresets));
+  }));
 }
 
 if (TARGET === 'gh-pages') {
-  module.exports = merge.apply(null, parsedRootPresets.concat([parsedEnv, demoCommon, {
+  module.exports = evaluatePresets(webpackrc, TARGET, paths, merge(demoCommon, {
     entry: {
-      app: config.paths.demo
+      app: paths.entry
     },
     plugins: [
       new Clean(['gh-pages']),
@@ -92,7 +98,23 @@ if (TARGET === 'gh-pages') {
         )
       })
     ]
-  }]).concat(parsedPresets));
+  }));
+}
+
+function evaluatePresets(webpackrc, target, paths, config) {
+  const parsedEnv = webpackrc.env[target];
+  const presets = webpackPresets(paths);
+  const rootConfig = {
+    resolve: {
+      extensions: ['']
+    }
+  };
+  const parsedRootPresets = webpackrc.presets.map((preset) => presets[preset]);
+  const parsedPresets = parsedEnv.presets.map((preset) => presets[preset]);
+
+  return merge.apply(null, [rootConfig].concat(parsedRootPresets).concat([
+    parsedEnv, config
+  ]).concat(parsedPresets));
 }
 
 /*
