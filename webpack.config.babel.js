@@ -76,14 +76,10 @@ const demoCommon = {
       }
     ]
   },
-  plugins: parsePlugins(webpackrc.plugins)
+  plugins: [
+    new SystemBellPlugin()
+  ]
 };
-
-function parsePlugins(plugins) {
-  return plugins.map((plugin) => {
-    return new require(plugin);
-  });
-}
 
 const parsedEnv = webpackrc.env[TARGET];
 const presets = webpackPresets(config);

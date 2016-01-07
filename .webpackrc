@@ -1,7 +1,4 @@
 {
-  "plugins": [
-    "system-bell-webpack-plugin"
-  ],
   "env": {
     "start": {
       "devtool": "eval-source-map",
