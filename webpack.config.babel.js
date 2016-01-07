@@ -14,6 +14,7 @@ import pkg from './package.json';
 
 import webpackPresets from './lib/presets';
 import evaluatePresets from './lib/evaluate_presets';
+import resolvePaths from './lib/resolve_paths';
 import renderJSX from './lib/render_jsx.jsx';
 
 const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
@@ -22,7 +23,6 @@ const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
 
 const RENDER_UNIVERSAL = true;
 const TARGET = process.env.npm_lifecycle_event;
-const ROOT_PATH = __dirname;
 
 process.env.BABEL_ENV = TARGET;
 
@@ -31,23 +31,20 @@ const commonConfig = {
     new SystemBellPlugin()
   ]
 };
-const paths = {
-  jsx: [
-    path.join(ROOT_PATH, 'demo'),
-    path.join(ROOT_PATH, 'src')
-  ],
-  png: path.join(ROOT_PATH, 'demo'),
-  jpg: path.join(ROOT_PATH, 'demo'),
-  json: path.join(ROOT_PATH, 'package.json'),
+const paths = resolvePaths(__dirname, {
+  jsx: ['./demo', './src'],
+  png: './demo',
+  jpg: './demo',
+  json: './package.json',
   css: [
-    path.join(ROOT_PATH, 'demo'),
-    path.join(ROOT_PATH, 'style.css'),
-    path.join(ROOT_PATH, 'node_modules/purecss'),
-    path.join(ROOT_PATH, 'node_modules/highlight.js/styles/github.css'),
-    path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.ie.css'),
-    path.join(ROOT_PATH, 'node_modules/react-ghfork/gh-fork-ribbon.css')
+    './demo',
+    './style.css',
+    './node_modules/purecss',
+    './node_modules/highlight.js/styles/github.css',
+    './node_modules/react-ghfork/gh-fork-ribbon.ie.css',
+    './node_modules/react-ghfork/gh-fork-ribbon.css'
   ]
-};
+});
 const evaluate = evaluatePresets.bind(null, webpackPresets, webpackrc, TARGET);
 
 if (TARGET === 'start') {
@@ -85,12 +82,9 @@ if (TARGET === 'gh-pages') {
 
 // !TARGET === prepush hook for test
 if (TARGET === 'test' || TARGET === 'tdd' || !TARGET) {
-  module.exports = evaluate(Object.assign({}, paths, {
-    jsx: [
-      path.join(ROOT_PATH, 'src'),
-      path.join(ROOT_PATH, 'tests')
-    ]
-  }), commonConfig);
+  module.exports = evaluate(Object.assign({}, paths, resolvePaths(__dirname, {
+    jsx: ['./src', './tests']
+  })), commonConfig);
 }
 
 if (TARGET === 'dist' || TARGET === 'dist:min') {
