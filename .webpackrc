@@ -53,7 +53,7 @@
         "env(development)",
         "eslint",
         "hmr",
-        "dev:css"
+        "css"
       ]
     },
     "gh-pages": {
@@ -71,7 +71,7 @@
       "presets": [
         "env(production)",
         "commonsChunk(vendors)",
-        "production:css",
+        "extractCSS(styles)",
         "minify"
       ]
     },
