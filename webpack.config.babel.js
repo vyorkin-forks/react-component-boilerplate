@@ -11,6 +11,7 @@ import App from './demo/App.jsx';
 import pkg from './package.json';
 
 import webpackPresets from './lib/presets';
+import webpackFormats from './lib/formats';
 import evaluatePresets from './lib/evaluate_presets';
 import renderJSX from './lib/render_jsx.jsx';
 
@@ -54,5 +55,5 @@ const extraConfig = {
 }[TARGET] || {};
 
 module.exports = evaluatePresets(
-  webpackPresets, webpackrc, TARGET, commonConfig, extraConfig
+  webpackPresets, webpackFormats, webpackrc, TARGET, commonConfig, extraConfig
 );
