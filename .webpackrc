@@ -1,15 +1,16 @@
 {
   "formats": [
     "jpg",
-    "png",
     "json",
-    "jsx"
+    "jsx",
+    "png"
+
   ],
   "paths": {
     "jsx": ["./demo", "./src"],
-    "png": "./demo",
-    "jpg": "./demo",
     "json": "./package.json",
+    "jpg": "./demo",
+    "png": "./demo",
     "css": [
       "./demo",
       "./style.css",
