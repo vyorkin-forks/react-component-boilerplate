@@ -22,12 +22,12 @@
   "common": {
     "dist": {
       "devtool": "source-map",
+      "entry": "./src",
       "output": {
         "path": "./dist",
         "libraryTarget": "umd",
         "library": "Boilerplate"
       },
-      "entry": "./src",
       "externals": {
         "react": {
           "commonjs": "react",
@@ -48,8 +48,8 @@
   },
   "env": {
     "start": {
-      "entry": "./demo",
       "devtool": "eval-source-map",
+      "entry": "./demo",
       "actions": [
         "setEnvironment(development)",
         "lint",
