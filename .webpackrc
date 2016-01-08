@@ -42,7 +42,7 @@
         "jsx": ["./src", "./tests"]
       },
       "presets": [
-        "eslint"
+        "lint"
       ]
     }
   },
@@ -52,7 +52,7 @@
       "devtool": "eval-source-map",
       "presets": [
         "setEnvironment(development)",
-        "eslint",
+        "lint",
         "hmr",
         "css"
       ]
