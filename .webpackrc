@@ -2,9 +2,9 @@
   "formats": [
     "babel(js)",
     "babel(jsx)",
-    "jpg",
-    "json",
-    "png"
+    "jpg()",
+    "json()",
+    "png()"
   ],
   "paths": {
     "babel": ["./demo", "./src"],
@@ -57,7 +57,7 @@
         "enableHMR"
       ],
       "formats": [
-        "css"
+        "css()"
       ]
     },
     "gh-pages": {
