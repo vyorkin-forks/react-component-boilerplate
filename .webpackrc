@@ -1,5 +1,5 @@
 {
-  "presets": [
+  "actions": [
     "jpg",
     "png",
     "json",
@@ -41,7 +41,7 @@
       "paths": {
         "jsx": ["./src", "./tests"]
       },
-      "presets": [
+      "actions": [
         "lint"
       ]
     }
@@ -50,7 +50,7 @@
     "start": {
       "entry": "./demo",
       "devtool": "eval-source-map",
-      "presets": [
+      "actions": [
         "setEnvironment(development)",
         "lint",
         "enableHMR",
@@ -69,7 +69,7 @@
         "filename": "[name].[chunkhash].js",
         "chunkFilename": "[chunkhash].js"
       },
-      "presets": [
+      "actions": [
         "setEnvironment(production)",
         "generateCommonsChunk(vendors)",
         "extractCSS(styles)",
@@ -85,7 +85,7 @@
       "output": {
         "filename": "boilerplate.min.js"
       },
-      "presets": [
+      "actions": [
         "minify"
       ]
     }

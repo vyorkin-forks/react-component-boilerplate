@@ -10,9 +10,9 @@ import ReactDOM from 'react-dom/server';
 import App from './demo/App.jsx';
 import pkg from './package.json';
 
-import webpackPresets from './lib/presets';
+import webpackActions from './lib/actions';
 import webpackFormats from './lib/formats';
-import evaluatePresets from './lib/evaluate_presets';
+import evaluate from './lib/evaluate';
 import renderJSX from './lib/render_jsx.jsx';
 
 const webpackrc = JSON.parse(fs.readFileSync('./.webpackrc', {
@@ -54,6 +54,6 @@ const extraConfig = {
   }
 }[TARGET] || {};
 
-module.exports = evaluatePresets(
-  webpackPresets, webpackFormats, webpackrc, TARGET, commonConfig, extraConfig
+module.exports = evaluate(
+  webpackActions, webpackFormats, webpackrc, TARGET, commonConfig, extraConfig
 );
