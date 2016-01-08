@@ -1,6 +1,7 @@
 {
   "presets": [
-    "images",
+    "jpg",
+    "png",
     "json",
     "jsx"
   ],
