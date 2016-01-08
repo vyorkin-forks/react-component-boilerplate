@@ -29,23 +29,16 @@ const commonConfig = {
     new SystemBellPlugin()
   ]
 };
-const evaluate = evaluatePresets.bind(
-  null, webpackPresets, webpackrc, TARGET, commonConfig
-);
-
-if (TARGET === 'start') {
-  module.exports = evaluate({
+const extraConfig = {
+  start: {
     plugins: [
       new HtmlWebpackPlugin({
         title: pkg.name + ' - ' + pkg.description,
         templateContent: renderJSX
       })
     ]
-  });
-}
-
-if (TARGET === 'gh-pages') {
-  module.exports = evaluate({
+  },
+  'gh-pages': {
     plugins: [
       new HtmlWebpackPlugin({
         title: pkg.name + ' - ' + pkg.description,
@@ -55,7 +48,9 @@ if (TARGET === 'gh-pages') {
         )
       })
     ]
-  });
-}
+  }
+}[TARGET] || {};
 
-module.exports = evaluate();
+module.exports = evaluatePresets(
+  webpackPresets, webpackrc, TARGET, commonConfig, extraConfig
+);
