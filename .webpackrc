@@ -53,7 +53,7 @@
       "presets": [
         "setEnvironment(development)",
         "lint",
-        "hmr",
+        "enableHMR",
         "css"
       ]
     },
