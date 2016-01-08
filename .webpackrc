@@ -4,7 +4,6 @@
     "json",
     "jsx",
     "png"
-
   ],
   "paths": {
     "jsx": ["./demo", "./src"],
