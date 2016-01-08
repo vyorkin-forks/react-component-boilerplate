@@ -43,7 +43,8 @@
         "babel": ["./src", "./tests"]
       },
       "actions": [
-        "lint"
+        "lint(js)",
+        "lint(jsx)"
       ]
     }
   },
@@ -53,7 +54,8 @@
       "entry": "./demo",
       "actions": [
         "setEnvironment(development)",
-        "lint",
+        "lint(js)",
+        "lint(jsx)",
         "enableHMR"
       ],
       "formats": [
