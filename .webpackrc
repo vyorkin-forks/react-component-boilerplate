@@ -71,7 +71,7 @@
       },
       "presets": [
         "env(production)",
-        "commonsChunk(vendors)",
+        "generateCommonsChunk(vendors)",
         "extractCSS(styles)",
         "minify"
       ]
