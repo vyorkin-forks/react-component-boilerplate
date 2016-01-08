@@ -1,6 +1,7 @@
 {
   "formats": [
-    "babel",
+    "babel(js)",
+    "babel(jsx)",
     "jpg",
     "json",
     "png"
