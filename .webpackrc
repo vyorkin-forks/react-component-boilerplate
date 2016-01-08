@@ -51,7 +51,7 @@
       "entry": "./demo",
       "devtool": "eval-source-map",
       "presets": [
-        "env(development)",
+        "setEnvironment(development)",
         "eslint",
         "hmr",
         "css"
@@ -70,7 +70,7 @@
         "chunkFilename": "[chunkhash].js"
       },
       "presets": [
-        "env(production)",
+        "setEnvironment(production)",
         "generateCommonsChunk(vendors)",
         "extractCSS(styles)",
         "minify"
