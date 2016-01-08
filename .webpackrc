@@ -1,14 +1,14 @@
 {
   "formats": [
+    "babel",
     "jpg",
     "json",
-    "jsx",
     "png"
   ],
   "paths": {
-    "jsx": ["./demo", "./src"],
-    "json": "./package.json",
+    "babel": ["./demo", "./src"],
     "jpg": "./demo",
+    "json": "./package.json",
     "png": "./demo",
     "css": [
       "./demo",
@@ -39,7 +39,7 @@
     },
     "test": {
       "paths": {
-        "jsx": ["./src", "./tests"]
+        "babel": ["./src", "./tests"]
       },
       "actions": [
         "lint"
