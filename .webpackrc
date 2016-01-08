@@ -58,7 +58,10 @@
     },
     "gh-pages": {
       "entry": {
-        "app": "./demo"
+        "app": "./demo",
+        "vendors": [
+          "react"
+        ]
       },
       "output": {
         "path": "./gh-pages",
@@ -67,7 +70,7 @@
       },
       "presets": [
         "env(production)",
-        "production:vendor",
+        "commonsChunk(vendors)",
         "production:css",
         "minify"
       ]
