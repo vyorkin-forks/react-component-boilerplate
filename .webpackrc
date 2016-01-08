@@ -1,5 +1,5 @@
 {
-  "actions": [
+  "formats": [
     "jpg",
     "png",
     "json",
@@ -53,7 +53,9 @@
       "actions": [
         "setEnvironment(development)",
         "lint",
-        "enableHMR",
+        "enableHMR"
+      ],
+      "formats": [
         "css"
       ]
     },
