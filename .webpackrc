@@ -2,7 +2,7 @@
   "presets": [
     "images",
     "json",
-    "react"
+    "jsx"
   ],
   "paths": {
     "jsx": ["./demo", "./src"],
