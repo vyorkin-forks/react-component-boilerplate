@@ -54,6 +54,11 @@ const extraConfig = {
   }
 }[TARGET] || {};
 
-module.exports = evaluate(
-  webpackActions, webpackFormats, webpackrc, TARGET, commonConfig, extraConfig
+module.exports = evaluate({
+    actions: webpackActions,
+    formats: webpackFormats,
+    webpackrc: webpackrc,
+    target: TARGET
+  },
+  commonConfig, extraConfig
 );
