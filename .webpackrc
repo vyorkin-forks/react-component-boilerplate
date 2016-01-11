@@ -1,7 +1,5 @@
 {
   "formats": [
-    "babel(js)",
-    "babel(jsx)",
     "jpg",
     "json",
     "png"
@@ -20,6 +18,11 @@
       "./node_modules/react-ghfork/gh-fork-ribbon.css"
     ]
   },
+  "presets": [
+    "setupReact",
+    "separateCSS(gh-pages, styles)",
+    "extractEntry(gh-pages, vendors, [react])"
+  ],
   "common": {
     "dist": {
       "devtool": "source-map",
@@ -28,46 +31,22 @@
         "path": "./dist",
         "libraryTarget": "umd",
         "library": "Boilerplate"
-      },
-      "externals": {
-        "react": {
-          "commonjs": "react",
-          "commonjs2": "react",
-          "amd": "React",
-          "root": "React"
-        }
       }
     },
     "test": {
       "paths": {
         "babel": ["./src", "./tests"]
-      },
-      "actions": [
-        "lint(js)",
-        "lint(jsx)"
-      ]
+      }
     }
   },
   "env": {
     "start": {
       "devtool": "eval-source-map",
-      "entry": "./demo",
-      "actions": [
-        "setEnvironment(development)",
-        "lint(js)",
-        "lint(jsx)",
-        "enableHMR"
-      ],
-      "formats": [
-        "css"
-      ]
+      "entry": "./demo"
     },
     "gh-pages": {
       "entry": {
-        "app": "./demo",
-        "vendors": [
-          "react"
-        ]
+        "app": "./demo"
       },
       "output": {
         "path": "./gh-pages",
@@ -76,8 +55,6 @@
       },
       "actions": [
         "setEnvironment(production)",
-        "generateCommonsChunk(vendors)",
-        "extractCSS(styles)",
         "minify"
       ]
     },

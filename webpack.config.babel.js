@@ -12,6 +12,7 @@ import pkg from './package.json';
 
 import webpackActions from './lib/actions';
 import webpackFormats from './lib/formats';
+import webpackPresets from './lib/presets';
 import evaluate from './lib/evaluate';
 import renderJSX from './lib/render_jsx.jsx';
 
@@ -57,6 +58,7 @@ const extraConfig = {
 module.exports = evaluate({
     actions: webpackActions,
     formats: webpackFormats,
+    presets: webpackPresets,
     webpackrc: webpackrc,
     target: TARGET
   },
