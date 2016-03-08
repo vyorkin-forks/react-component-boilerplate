@@ -1,5 +1,9 @@
-'use strict';
+import React from 'react';
 
-// this should be the entry point to your library
-module.exports = {};
+const sym = Symbol('fdsf');
 
+export default class Qux extends React.Component {
+    render() {
+        return <div>fdsfsdf</div>;
+    }
+}
